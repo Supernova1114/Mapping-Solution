@@ -6,7 +6,7 @@ public class MapPainter : MonoBehaviour
 {
     [SerializeField] private Mapper mapper;
 
-    private short[,] map;
+    List<List<short>> map;
 
     public RenderTexture renderTexture; // renderTextuer that you will be rendering stuff on
     public Renderer renderer; // renderer in which you will apply changed texture
@@ -30,11 +30,16 @@ public class MapPainter : MonoBehaviour
         //otherwise it will read screen pixels.
         texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
 
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int i = 0; i < map.Count; i++)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int j = 0; j < map[0].Count; j++)
             {
-                texture.SetPixel(i, j, new Color(1 - map[i, j], 0, 0));
+                if (map[i][j] == 0) // blocked
+                    texture.SetPixel(i, j, new Color(1, 0, 0));
+                else if (map[i][j] == 1) // open
+                    texture.SetPixel(i, j, new Color(0, 0, 0));
+                else
+                    texture.SetPixel(i, j, new Color(0, 0, 1));
             }
         }
 
